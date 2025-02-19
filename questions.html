@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .quiz-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2 id="question">Loading...</h2>
+        <ul class="options" id="options"></ul>
+        <button onclick="nextQuestion()">Next</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What is the capital of France?",
+                options: ["Berlin", "Madrid", "Paris", "Rome"],
+                answer: "Paris"
+            },
+            {
+                question: "Which language runs in a web browser?",
+                options: ["Java", "C", "Python", "JavaScript"],
+                answer: "JavaScript"
+            },
+            {
+                question: "What does HTML stand for?",
+                options: ["HyperText Markup Language", "HyperTransfer Markup Language", "HighText Machine Language", "None of the above"],
+                answer: "HyperText Markup Language"
+            }
+        ];
+        
+        let currentQuestionIndex = 0;
+        function loadQuestion() {
+            const questionData = quizData[currentQuestionIndex];
+            document.getElementById("question").innerText = questionData.question;
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+            questionData.options.forEach(option => {
+                const li = document.createElement("li");
+                li.innerHTML = `<input type="radio" name="option" value="${option}"> ${option}`;
+                optionsContainer.appendChild(li);
+            });
+        }
+        
+        function nextQuestion() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+            if (!selectedOption) {
+                alert("Please select an answer!");
+                return;
+            }
+            const answer = selectedOption.value;
+            if (answer === quizData[currentQuestionIndex].answer) {
+                document.getElementById("result").innerText = "Correct!";
+            } else {
+                document.getElementById("result").innerText = "Wrong!";
+            }
+            
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < quizData.length) {
+                    document.getElementById("result").innerText = "";
+                    loadQuestion();
+                } else {
+                    document.getElementById("quiz-container").innerHTML = "<h2>Quiz Completed!</h2>";
+                }
+            }, 1000);
+        }
+        
+        loadQuestion();
+    </script>
+</body>
+</html>
